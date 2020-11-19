@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import "./App.css"
 
 function Todo(props) {
@@ -12,77 +12,64 @@ function Todo(props) {
   )
 }
 
-class TodoForm extends React.Component {
-  state = {
-    value: ''
-  }
+const TodoForm = (props) => {
 
-  handleSubmit = (e) => {
+    const [value, setValue] = useState('') 
+
+
+  const handleSubmit = (e) => {
     e.preventDefault()
-    if (this.state.value.trim() === '') {
+    if (value.trim() === '') {
       alert("Write something")
       return
     }
-    this.props.submit(this.state.value)
-    this.setState({
-      value: ''
-    })
+    props.submit(value)
+    setValue('')
   }
 
-  onChangeText = (e) => {
-    console.log(e.target.value);
-    this.setState({
-      value: e.target.value
-    })
+  const onChangeText = (e) => {
+    setValue(e.target.value)
   }
 
-  render() {
     return (
-      <form onSubmit={this.handleSubmit}>
-        <input className="input" type="text" value={this.state.value} placeholder="Add a task" onChange={this.onChangeText} />
+      <form onSubmit={handleSubmit}>
+        <input className="input" type="text" value={value} placeholder="Add a task" onChange={onChangeText} />
       </form>
     )
-  }
 }
 
-class App extends React.Component {
-  state = {
-    todos: [
+const App = () => {
+  const [todos, setTodos] = useState(
+    [
       { name: "Learn React", completed: false },
       { name: "Learn states", completed: true },
       { name: "Learn components", completed: true }
     ]
+  );
+
+  const addTodo = (todo) => {
+    const newTodos = [...todos, { name: todo, completed: false }]
+    setTodos(newTodos)
   }
 
-  addTodo = (todo) => {
-    const newTodos = [...this.state.todos, { name: todo, completed: false }]
-    this.setState({
-      todos: newTodos
-    })
-  }
-
-  completeTask = (index) => {
-    const newTodos = [...this.state.todos];
+  const completeTask = (index) => {
+    const newTodos = [...todos];
     newTodos[index].completed = true
-    this.setState({
-      todos: newTodos
-    })
+    setTodos(newTodos)
   }
 
-  render() {
-    return (
-      <div className="app">
-        <div className="todo-list">
-          {this.state.todos.map((item, index) =>
-            <Todo key={index} todo={item} index={index} completeTask={this.completeTask} />
-          )}
-          <div>
-            <TodoForm submit={this.addTodo} />
-          </div>
+  return (
+    <div className="app">
+      <div className="todo-list">
+        {todos.map((item, index) =>
+          <Todo key={index} todo={item} index={index} completeTask={completeTask} />
+        )}
+        <div>
+          <TodoForm submit={addTodo} />
         </div>
       </div>
-    )
-  }
+    </div>
+  )
 }
 
 export default App;
