@@ -1,42 +1,7 @@
 import React, { useState } from 'react';
+import Todo from './Todo.js'
+import TodoForm from './TodoForm.js'
 import "./App.css"
-
-function Todo(props) {
-  return (
-    <div style={{ textDecoration: props.todo.completed ? 'line-through' : 'none' }} className="todo">
-      {props.todo.name}
-      <div>
-        <button onClick={() => props.completeTask(props.index)}>done</button>
-      </div>
-    </div>
-  )
-}
-
-const TodoForm = (props) => {
-
-    const [value, setValue] = useState('') 
-
-
-  const handleSubmit = (e) => {
-    e.preventDefault()
-    if (value.trim() === '') {
-      alert("Write something")
-      return
-    }
-    props.submit(value)
-    setValue('')
-  }
-
-  const onChangeText = (e) => {
-    setValue(e.target.value)
-  }
-
-    return (
-      <form onSubmit={handleSubmit}>
-        <input className="input" type="text" value={value} placeholder="Add a task" onChange={onChangeText} />
-      </form>
-    )
-}
 
 const App = () => {
   const [todos, setTodos] = useState(
